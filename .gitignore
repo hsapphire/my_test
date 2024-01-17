@@ -1,1 +1,6 @@
 /java/calculate/calculate/.idea
+.idea
+# vue排除
+node_modules
+.vscode
+
