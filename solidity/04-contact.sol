@@ -42,4 +42,5 @@ contract MyToken{
         //
         balances[recipient]+=amount;
 }
+    
 }
