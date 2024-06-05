@@ -13,6 +13,7 @@ contract B {
 		//一个空的构造函数
     constructor() {}
 }
-
+contract B1 {
 //定义一个构造函数，其参数名为 age，是 uint 类型。
-constructor(uint age){}
+    constructor(uint age){}
+}

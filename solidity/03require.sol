@@ -10,5 +10,10 @@ contract VendingMachine {
     }
 }
 
+contract VendingMachine1 {
+    //使用 require 语句来确保给定变量 x 大于 10 ，否则函数将停止执行但不抛出异常
+    // require(x>10);
 
-require(x>10);
+    //创建一个类型为 address 的名为 owner 的变量，并将其赋值为msg.sender。
+    address owner=msg.sender;
+}
