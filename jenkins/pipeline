@@ -1,0 +1,141 @@
+environment {
+    sucReceivers = 'peray.zhao@datatist.com'
+    failReceivers = 'mike.wang@datatist.com'
+}
+stages {
+    stage('show parameters') {
+        steps {
+            echo "all params=${params}"
+        }
+    }
+    stage('Git Checkout') {
+        steps {
+            // sh("ls -al ${env.WORKSPACE}")
+            // deleteDir()  // clean up current work directory
+            // sh("ls -al ${env.WORKSPACE}")
+      
+            checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[credentialsId: 'deploy', url: "${GIT_URL}"]],  branches: [[name: "${params.tag}"]]], poll: false
+            // git branch: "${params.tag}", credentialsId: 'deploy', url: "${GIT_URL}"
+        }
+    }
+    stage ('Maven Build') {
+        when {
+            expression {return 'true' == params.need_build}
+        }            
+        steps {
+            sh "mvn clean -U && mvn -U package -Dmaven.test.skip=true -B"
+        }
+    }
+    
+    stage ('do something before') {
+        steps {
+            sh "echo do something before"
+            // 【需要变动点】按需要添加
+            sh """
+                echo "nothing"
+            """
+        }
+    }
+    
+    stage ('deploy jar & restart k8s') {
+        steps {
+            script {
+                def app_to_publish=sh(script: "echo ${params.PARAM_APP_NAME}", returnStdout: true).trim()
+                def tag_or_branch=sh(script: "echo ${params.tag}", returnStdout: true).trim()
+                
+                def isAll = (ALL.get(0) == app_to_publish)
+                // apps to publish
+                def publish_list = isAll ? APP_LIST : [app_to_publish]
+                println "publish_list = " + publish_list.join(', ')
+                
+                for (int i = 0; i < publish_list.size(); ++i) {
+                    def isLast = (i == publish_list.size() - 1) ? "true" : "false"
+                    sh """
+                        echo "prepare to package fat jar and repackage as slim jar"
+                        if [ ! -d "${COMMON_LIB_DIR}" ]; then
+                          mkdir -p "${COMMON_LIB_DIR}"
+                        fi
+                
+                        jar_file_suffix=\$(echo "${params.tag}" | sed 's/\\//_/g')
+                        fat_version_name=\${jar_file_suffix}
+                        slim_version_name=slim_\${fat_version_name}_shrcb
+                        package_dir_with_fat_version=${TMP_PACKAGE_DIR}/\${fat_version_name}
+                        package_dir_with_slim_version=${TMP_PACKAGE_DIR}/\${slim_version_name}
+                        if [ ! -d "\${package_dir_with_fat_version}" ]; then
+                          mkdir -p "\${package_dir_with_fat_version}"
+                        fi
+                        if [ ! -d "\${package_dir_with_slim_version}" ]; then
+                          mkdir -p "\${package_dir_with_slim_version}"
+                        fi
+                        if [ ! -d "${PACKAGE_DIR}/\${fat_version_name}" ]; then
+                            mkdir -p "${PACKAGE_DIR}/\${fat_version_name}"
+                        fi  
+                        if [ ! -d "${PACKAGE_DIR}/\${slim_version_name}" ]; then
+                            mkdir -p "${PACKAGE_DIR}/\${slim_version_name}"
+                        fi
+                        
+                        app="${publish_list[i]}"
+                        app_name=\${app##*/}
+                        echo "prepare to deploy app=\${app}, app_name=\${app_name}"
+                        echo "prepare to deploy \${app_name}"
+                        fatjar=\${package_dir_with_fat_version}/\${app_name}.jar.\${jar_file_suffix}
+                        slimjar=\${package_dir_with_slim_version}/\${app_name}.slim.jar.\${jar_file_suffix}
+                        lib_list_file=\${package_dir_with_slim_version}/\${app_name}.slim.lib_list.\${jar_file_suffix}
+                        unpack_dir=\${package_dir_with_slim_version}/\${app_name}_lib_\${jar_file_suffix}_unpack
+                        rm -rf "\${unpack_dir}"
+                        mkdir -p "\${unpack_dir}"
+                        rm -f "\${slimjar}"
+                        rm -f "\${fatjar}"
+                        cp \${app}/target/\${app_name}.jar \${fatjar}
+                      
+                        cp -f \${fatjar} ${PACKAGE_DIR}/\${fat_version_name}/
+                        unzip -q -o \${fatjar} -d \${unpack_dir}
+
+                        ls -A \${unpack_dir}/BOOT-INF/lib | grep -E -v "^(datatist-|wolf-|epay-)" > \${lib_list_file}
+                        cur_dir=`pwd`
+                        cd \${unpack_dir}/BOOT-INF/lib
+                        mv -f `ls \${unpack_dir}/BOOT-INF/lib | grep -E -v "^(datatist-|wolf-|epay-)"` ${COMMON_LIB_DIR}
+                        sed -i 's/org.springframework.boot.loader.JarLauncher/org.springframework.boot.loader.PropertiesLauncher/g' \${unpack_dir}/META-INF/MANIFEST.MF
+                        cd \${cur_dir}
+                        jar -cfM0 \${slimjar} -C \${unpack_dir} .
+                        rm -rf "\${unpack_dir}"
+                        cp -f \${slimjar} ${PACKAGE_DIR}/\${slim_version_name}
+                        cp -f \${lib_list_file} ${PACKAGE_DIR}/\${slim_version_name}
+
+                        old_dir=`pwd`
+                        cd ${PACKAGE_DIR}/\${slim_version_name}
+                        tar -zcvf \${app_name}.slim.tar.gz.\${jar_file_suffix} \${app_name}.slim.jar.\${jar_file_suffix} \${app_name}.slim.lib_list.\${jar_file_suffix}
+                        cp * ../ -R
+                        cd \${old_dir}
+                        
+                        cp -f -R ${COMMON_LIB_DIR} ${PACKAGE_DIR}
+                        
+                        if [ \"${params.restart_application}\" == \"true\" ]; then
+                            kubectl patch -n ${NAMESPACE} sts \${app_name} --type='json' -p '[{"op": "replace", "path": "/spec/template/spec/containers/0/args/1", "value": "'\${jar_file_suffix}'" }]'
+                            sleep 2
+                            pods=`kubectl get pod -n ${NAMESPACE} -l name=\${app_name} | sed -e 1d | awk '{print \$1}'`
+                            [ -n "\$pods" ] && echo \$pods | xargs kubectl delete pod -n ${NAMESPACE}
+                            echo "success deploy slim \${app_name} \${jar_file_suffix}"
+                        else
+                            echo "skip deploy slim \${app_name} \${jar_file_suffix} "
+                        fi
+                        
+                        echo 'push to ftp'
+                        # 是否需要将包发布至ftp
+                        if [ "${params.push_to_ftp}" == "true" ]; then
+                            ncftpput -u datatist -p Datatist-aws-ftp#888! ftp2.datatist.com /zhaoxin/k8s/package ${PACKAGE_DIR}/\${slim_version_name}/\${app_name}.slim.tar.gz.\${jar_file_suffix}
+
+                            if [ "${isLast}" == "true" ]; then
+                                echo 'current package is last. push common_lib to ftp'
+                                ncftpput -u datatist -p Datatist-aws-ftp#888! -R ftp2.datatist.com /zhaoxin/k8s/package ${COMMON_LIB_DIR}
+                            fi
+                        fi
+                    """
+                    
+                }
+                
+            } // end of script
+        } // end of steps
+    } // end of stage
+  
+}

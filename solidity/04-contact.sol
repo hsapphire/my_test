@@ -42,5 +42,46 @@ contract MyToken{
         //
         balances[recipient]+=amount;
 }
+
+
+contract Examplec {
+  //这里我们定义了一个名为Student结构体，其有name，studentId，grade三个属性
+  struct Student {
+    string name;
+    uint256 studentId;
+    uint256 grade;
+  }
+  Student("zhangsan", 18);
+}
+
+
+contract Example612 {
+  //在这里定义了一个常量MAXINPUT，其值不可以在合约中更改。
+  uint256 constant public MAXINPUT = 1;
+
+  function input(uint256 num) public {
+    require(num < MAXINPUT);
+  }
+}
+
+pragma solidity ^0.8.0;
+
+contract Example612-1 {
+  //在这里定义了一个immutable变量，其值需要在构造函数中定义。
+  address immutable public token;
+
+  constructor(address _tokenAddress) {
+    token = _tokenAddress;
+  }
+}
+
+//完善以下代码，使得当 a 等于 10 时跳过这次迭代。（需要大括号）
+for (int a = 0; a < 20; a++) {
+  if(a==10){
+ continue;
+}
+}
+ 
+
     
 }
