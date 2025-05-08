@@ -1,0 +1,692 @@
+
+
+Alt+F4 把所有的当前app都关掉
+ctrl+w 把当前的某个APP关掉
+CTRL+Z 撤销
+ALT+S 发送邮件
+ctrl+B 加粗
+ctrl+u 加下划线
+微软+L lock电脑
+Alt+tab 切换
+ctrl+tab 是excel之间的转换
+F5 刷新
+F2 重命名，
+ctrl+g 选中 或者 F5 选中
+F7 check 拼写错误
+F1 help的功能
+Editorial Company Identifier (EdcoID), ??
+EDCOID/Primary RIC is basically an essential identifer For a company. The usage oF this
+feld depends From client to client and product to product
+On Eikon EDCOID is the main key to identify the company and to pull company news.
+Journalists require EDCOIDs to attach news stories of the companies they are writing about,
+while products require EDCOIDs for companies to be able to be searched correctly.
+Wherein, on Datascope Equities product, Primary RIC signifes the main listing For
+a security. Also this feld is used For Pricing, Corax & Estimates data purpose.
+Stock Exchange Daily Official List (SEDOL),
+http://mops.twse.com.tw/mops/web/t113sb07# 查REG S 的PPN 的source
+We shall do a quality check as a preventive measure and ensure that, this won’t occur in future.
+no amendment is needed from our side
+ 转换债 I can confirm that there is no underlying asset for contingent convertibles with write down option. Underlying asset is only available to convertible bonds when there is a conversion option.Please be informed that
+公式 @ROUND(#CNITB3YTBY5DAVG<1d+2.09+3,0.01)
+      @PREV_RATE()+3
+      @ROUND(#CNITB5YFIXTBY5MA<1d+1.76+3,0.01) Asset ID: 0x00102c807cb30774 第一个公式
+chain 0#ARRPSCNSC=
+select
+a.asset_info_src_cd, a.isin_nm
+from
+dmo_govcorp..asset a
+where
+a.isin_nm="XS1534927352" or a.isin_nm="XS1634359936" or a.isin_nm="XS1509006034" or a.isin_nm="XS1653762853" or a.isin_nm="HK0000030970" or a.isin_nm="HK0000031549" or a.isin_nm="HK0000067535" or a.isin_nm="XS0712644086" or a.isin_nm="XS1508531768" or a.isin_nm="XS1607972079" or a.isin_nm="XS1636123058" or a.isin_nm="XS1616407786"
+Select a.asset_id,
+t.id_cd, t.id_number
+from dmo_govcorp..asset_ident t,
+dmo_govcorp..asset a
+where
+a.asset_id = t.asset_id and (t.id_cd='CHN'or t.id_cd='PYC')
+and a.asset_id in (0x00102c9b481910e6,
+0x00102ca0481910dd,
+0x00102c9c481910e1,
+0x00102c9a481910e7,
+0x00102c9e481910e3,
+0x00102cda80da0fb3,
+0x00102cc0a5411008,
+0x00102c3c43341067,
+0x00102c3b43341060,
+0x00102c3a43341061,
+0x00102c9c41d30f3d,
+0x00102c21f0ee0f0c,
+0x00102cd25def0f53,
+0x00102cdbe4f50ff9,
+0x00102cbe77fc0f06,
+0x00102c5dde0510aa,
+0x00102c32a60910b1,
+0x00102c917f1710d5,
+0x00102c2670d90ebd)
+select
+a.asset_id, a.prospectus_dt, a2.cdc_asset_class_cd, o.program_type_cd, o.instrument_type_cd, a.debt_type_cd, o.govt_bond_type_cda
+from
+dmo_govcorp..orig_iss_info o,
+dmo_govcorp..asset a,
+dmo_govcorp..asset2 a2
+where
+a.cntry_of_iss_cd = "CN" and a.asset_id = a2.asset_id and a.asset_id=o.asset_id
+Select a.asset_id,
+a.cpn_class_cd,
+a.int_leg_nm,
+a.int_formula
+from dmo_govcorp..int_def a,
+dmo_govcorp..asset t
+where
+a.asset_id = t.asset_id and
+a.int_leg_nm=2 and a.cpn_class_cd='FLT'
+and a.int_formula like '%PR%'
+and t.cntry_of_iss_cd in ('CN')
+select
+a.cdc_asset_class_cd, a.isin_nm
+o.govt_bond_type_cd
+from
+dmo_govcorp..orig_iss_info o,
+dmo_govcorp..asset2 a
+where
+a.asset_id=o.asset_id and (a.isin_nm="CND10000HW69" OR
+a.isin_nm="CND10000H9L7")
+select
+a.asset_id,
+a.amt_iss_tot,
+a.funged_fl,
+m.asset_status_cd,
+a.maturity_dt
+from
+dmo_govcorp..asset_status_hist m,
+dmo_govcorp..asset a
+where
+a.funged_fl ="y" and
+a.asset_id =m.asset_id and
+a.cntry_of_iss_cd = "CN"and
+m.asset_status_cd = "FNG"
+select
+a.asset_id,
+a.amt_iss_tot,
+m.amt_outsd,
+f.fund_type_cd
+from
+dmo_govcorp..amt_outsd_hist m,
+dmo_govcorp..asset a,
+dmo_govcorp..fund_sched f
+where
+m.amt_outsd_chg_cd="SFP"
+and a.asset_id =f.asset_id and
+a.asset_id =m.asset_id and
+a.cntry_of_iss_cd = "CN"
+SELECT
+      p.party_id,
+      p.party_long_name,
+      p.party_short_name,
+      p.party_cntry_cd,
+p.party_cntry_incorp_cd,
+      p.active_fl,
+      p.cur_immed_parent_id,
+      p.cur_ultimate_parent_id,
+      p.debt_issued_fl
+FROM
+      dmo_govcorp..party p
+WHERE
+p.cur_ultimate_parent_id in (0x00102caca0a81c84)
+or p.cur_immed_parent_id in (0x00102caca0a81c84)
+select
+p.prc_qt_mtd_cd,
+a.asset_id
+from
+dmo_govcorp..orig_iss_info p,
+dmo_govcorp..asset a
+where
+a.cntry_of_iss_cd = "CN"
+CHECK TICKER
+select
+p.contributor_symbol,
+a.rtr_ticker
+from
+dmo_govcorp..contrib_vehicle_xref p,
+dmo_govcorp..asset a
+where
+a.asset_id = p.asset_id and p.contributor_symbol in
+Check dup SQL：
+select i.id_number,i.id_cd,a.asset_id from dmo_govcorp..asset a, dmo_govcorp..asset_ident i where i.asset_id=a.asset_id and a.cntry_of_iss_cd="CN" and i.id_number in (
+"125504",
+select
+a.asset_id,
+b.min_trading_lot,
+b.exch_cd
+from
+dmo_govcorp..asset_exchanges b,
+dmo_govcorp..asset a
+where
+a.asset_id in (0x00102c4951590d70) and a.cntry_of_iss_cd = "CN"
+"SELECT count(a.asset_id), a.cntry_of_iss_cd, a.asset_subtype_cd, datepart(year,delisting_dt), exch_cd
+FROM govcorp..asset_exchanges e, govcorp..asset a
+WHERE e.asset_id = a.asset_id
+and datediff (dd,e.delisting_dt,getdate())<0
+GROUP BY a.cntry_of_iss_cd, a.asset_subtype_cd, datepart(year,delisting_dt), exch_cd
+ORDER BY a.cntry_of_iss_cd, a.asset_subtype_cd, datepart(year,delisting_dt) desc, exch_cd"
+"SELECT a.asset_id, a.cntry_of_iss_cd, a.asset_subtype_cd, a.maturity_dt, e.delisting_dt, e.exch_cd
+FROM govcorp..asset_exchanges e, govcorp..asset a
+WHERE e.asset_id = a.asset_id
+and datediff (dd,e.delisting_dt,getdate())<0
+ORDER BY a.cntry_of_iss_cd, a.asset_subtype_cd, exch_cd"
+original issue amount is null
+"SELECT count(a.asset_id), a.asset_info_src_cd, a.cntry_of_iss_cd, o.instrument_type_cd, i.instrument_type_descr
+FROM govcorp..asset a, gcodes..asset_status_cds g, govcorp..orig_iss_info o, gcodes..instrument_type_cds i
+WHERE a.asset_id = o.asset_id
+AND o.instrument_type_cd *= i.instrument_type_cd
+AND a.orig_amt_iss IS NULL
+AND a.asset_status_cd = g.asset_status_cd
+AND g.active_fl = 'y'
+and a.asset_status_cd = 'ISS'
+GROUP BY a.asset_info_src_cd, a.cntry_of_iss_cd, o.instrument_type_cd, i.instrument_type_descr
+ORDER by a.asset_info_src_cd, a.cntry_of_iss_cd, o.instrument_type_cd"
+RE: Seniority Code vs Status on Liquidation
+select a.asset_id,
+asset_setup_dt = convert(char(10), a.asset_setup_dt, 101),
+      a.asset_status_cd,
+      a.asset_type_cd, a.sovr_class_cd,
+      a.asset_subtype_cd,
+      a.cntry_of_iss_cd,
+      a.debt_type_cd,
+      a.isin_nm,
+o.seniority_type_cd,
+x.status_on_liquidation,
+a2.seniority_cd
+from dmo_govcorp..asset a,
+gcodes.dbo.asset_status_cds g,
+gcodes.dbo.cntry_cds c,
+gcodes.dbo.instrument_type_cds i,
+dmo_govcorp..orig_iss_info o,
+dmo_govcorp..asset_dbs_xref x,
+dmo_govcorp..asset2 a2
+where g.active_fl = 'y'
+and a.asset_status_cd = g.asset_status_cd
+AND a.cntry_of_iss_cd = c.iso_scntry_cd
+AND c.global_region_cd = 'A'
+and a.asset_id = o.asset_id
+and a.asset_id = x.asset_id
+and a.asset_id = a2.asset_id
+and o.instrument_type_cd = i.instrument_type_cd
+and a.asset_subtype_cd in ('DMTC','FRGN')
+and i.sukuk_fl = 'n'
+and
+(
+(o.seniority_type_cd = 'SEC'
+and x.status_on_liquidation not in ('CLG','COL','SEC')
+)
+OR
+(o.seniority_type_cd = 'UN'
+and x.status_on_liquidation not in ('CLG','GVT','SUK', 'UND','UNS', NULL)
+)
+OR
+(o.seniority_type_cd = 'SRSEC'
+and x.status_on_liquidation not in ('SRS','CLG','GVT')
+)
+OR
+(o.seniority_type_cd = 'SR'
+and x.status_on_liquidation not in ('SEN','SUK','CLG','GVT')
+)
+OR
+(o.seniority_type_cd = 'SRSUBSEC'
+and x.status_on_liquidation not in ('SSB')
+)
+OR
+(o.seniority_type_cd = 'SRSUB'
+and x.status_on_liquidation not in ('SSB')
+)
+OR
+(o.seniority_type_cd = 'SUBSEC'
+and x.status_on_liquidation not in ('SUB','SUK','CLG')
+)
+OR
+(o.seniority_type_cd = 'SUB'
+and x.status_on_liquidation not in ('SUB')
+)
+OR
+(o.seniority_type_cd = 'JRSEC'
+and x.status_on_liquidation not in ('JNT','JSB','SUK')
+)
+OR
+(o.seniority_type_cd = 'JRSUB'
+and x.status_on_liquidation not in ('JNT','JSB','SUK')
+)
+)
+You may need this sql to pull out the active instruments without governing law for your market. Please pull such report only for one market at a time.
+select distinct a.asset_id
+from dmo_govcorp..asset a, gcodes..asset_status_cds g, dmo_govcorp..relationship_hist r
+WHERE a.asset_id = r.to_obj_oid
+AND a.asset_status_cd = g.asset_status_cd
+AND g.active_fl = 'y'
+AND a.cntry_of_iss_cd = 'INSERT CNTRY CODE'
+AND not exists
+   (select r.to_obj_oid
+    from dmo_govcorp..relationship_hist r
+    WHERE a.asset_id = r.to_obj_oid
+    and r.relation_type_cd = 'IsGoverningLawOf'
+                AND r.to_obj_type_cd = 'GCBD')
+select asset_id, ori_iss_dt
+from govcorp..asset
+where asset_last_chg_dt>=dateadd(hh,-24,getdate()) and orig_iss_dt is null
+select a.isin_nm, o.seniority_type_cd
+from dmo_govcorp..asset a,
+dmo_govcorp..orig_iss_info o
+where a.asset_id = o.asset_id
+and a.isin_nm in ("CND100009GW9","CND100009Y78")
+select a.asset_id,
+a.asset_status_cd,
+a.sovr_class_cd,
+a.cpn_class_cd,
+n.large_note,
+n.note,
+n.note_type_cd,
+note_eff_dt=convert(char(10), n.note_eff_dt, 101),
+Prospectus_dt = convert(Char(10), a.prospectus_dt,101),
+o1.exch_cd,
+o2.exch_cd,
+listing_dt1 = convert(char(10), o1.listing_dt, 101),
+listing_dt2 = convert(char(10), o2.listing_dt, 101)
+from dmo_govcorp..asset a,
+gcodes.dbo.asset_status_cds g,
+dmo_govcorp..notes n,
+dmo_govcorp..asset_exchanges o1,
+dmo_govcorp..asset_exchanges o2
+where g.active_fl = 'y'
+and a.asset_status_cd = g.asset_status_cd
+and a.asset_subtype_cd in ('DMTC','FRGN')
+and a.asset_id = o1.asset_id
+and a.asset_id = o2.asset_id
+and a.asset_id *= n.asset_id
+and n.note_type_cd = 'MCE'
+and a.cntry_of_iss_cd = 'CN'
+and a.cpn_class_cd <> 'DSC'
+and o1.exch_cd ='CFS'
+and o2.exch_cd = 'SHH'
+order by n.note_eff_dt
+Jessie Koh Case SQL:
+select i.obj_oid, i.id_value, a.*
+from govcorp..id_obj_xref_hist i,
+ejv_common..govcorp_price a
+where i.obj_oid = a.asset_id
+and i.id_value in '(122235,'098008') '
+and i.obj_type_cd = 'GCBD'
+and i.global_region_cd = 'A'
+SELECT
+a.asset_id, a.full_bridge_symbol, a.isin_nm, convert(char(10),a.asset_setup_dt,101) asset_setup_dt, a.asset_status_cd, a.cntry_of_iss_cd, a.day_count_cd, b.*
+FROM
+dmo_govcorp..asset a, dmo_govcorp..asset_exchanges b
+WHERE
+a.asset_id =b.asset_id and
+a.cntry_of_iss_cd = "CN" and
+a.asset_status_cd in ("ISS","RPN","TBI","TBP","TBC","WHN","DEF","DFS") and
+b.exch_cd ="CFS" and
+a.day_count_cd<>5
+Select asset_id, sec_class_cd,
+asset_subtype_cd
+FROM dmo_govcorp..asset
+where
+cntry_of_iss_cd in ('TW')
+BTB or'SAB'or'CTB'
+BTB: 0x000386001f9c8f89
+0x00038600223122b4
+SAB
+CTB
+Select a.asset_id,
+b.cdc_asset_class_cd,
+a.cpn_class_cd,
+a.int_leg_nm,
+t.cpn_type_cd
+from dmo_govcorp..int_def a,
+dmo_govcorp..asset2 b,
+dmo_govcorp..asset t
+where
+b.asset_id = a.asset_id and b.asset_id = t.asset_id and b.cdc_asset_class_cd in ('BTB') and t.cntry_of_iss_cd in ('CN')
+Select a.asset_id,
+a.cpn_class_cd,
+a.int_leg_nm,
+a.int_formula
+from dmo_govcorp..int_def a,
+dmo_govcorp..asset t
+where
+a.asset_id = t.asset_id and t.isin_nm in ("TW000G122071",
+"TW000G122360",
+"TW000G122030",
+"TW000G122238",
+"TW000G122105",
+"TW000G122212",
+"TW000G122055",
+"TW000G122188",
+"TW000G122394",
+"TW000G122154",
+"TW000G122402",
+"TW000G122329",
+"TW000G122162",
+"TW000G122121",
+"TW000G122378",
+"TW000G122410",
+"TW000G122428",
+"TW000G122436")
+SELECT
+      p.party_id,
+      p.party_long_name,
+      p.party_short_name,
+      p.party_cntry_incorp_cd,
+      p.cur_immed_parent_id,
+      p.debt_issued_fl,
+      p.private_co_fl
+FROM
+      dmo_govcorp..party p
+WHERE
+p.party_id in (0x0002a00008584ab8,
+0x0002a0002ab15960,
+0x000386000bab1134,
+0x000386000bbad5e1,
+0x000386000efabfce,
+0x000386000efbcaba,
+0x000386000f0bd051,
+0x00038601451a815a)
+SELECT
+      p.party_id,
+      p.party_long_name,
+      p.party_short_name,
+      p.party_cntry_cd,
+      p.debt_issued_fl,
+      p.sovr_class_cd
+FROM
+      dmo_govcorp..party p
+WHERE
+p.party_id in (0x000405007152694b)
+Case for conversion price and ratio and underlying check
+select a.asset_id, a.prospectus_dt, m.mace_issue_id, a.convertible_fl, i1.id_cd, i1.id_number, i3.id_number as 'ISIN',c.party_long_name, c.party_id, s.event_eff_dt, s.cnv_par, s.cnv_px, s.cnv_ratio, s.cnv_leg_nm, m.und_asset_domicile_cd, m.und_asset_curr_cd, m.und_asset_name, m.und_asset_ric, m.und_asset_ticker, m.und_asset_sector_cd, m.und_org_id, u.undly_id, y.undly_issuer_id
+from dmo_govcorp..asset a, dmo_govcorp..party c,dmo_govcorp..asset_ident i1 ,dmo_govcorp..asset_ident i2, dmo_govcorp..asset_ident i3,
+dmo_govcorp..convert_def m,
+dmo_govcorp..convert_sched s,
+dmo_govcorp..convert_underlying_xref u,
+dmo_govcorp..underlying y
+where a.issuer_id = c.party_id and u.undly_id = y.undly_id and a.asset_id =i1.asset_id and a.asset_id =m.asset_id and a.asset_id =s.asset_id and a.asset_id =u.asset_id and a.asset_id *=i3.asset_id and a.asset_id *=i2.asset_id and i1.id_cd in ('SHZ') and i2.id_cd = 'PYC' and i3.id_cd = 'ISN' and a.cntry_of_iss_cd = "CN" and i1.id_number in
+check amount outstanding hist code
+select
+a.asset_id,
+h.amt_outsd_chg_cd
+from
+dmo_govcorp..asset a,
+dmo_govcorp..amt_outsd_hist h,
+dmo_govcorp..asset_status_cd s
+where
+a.asset_id = h.asset_id and a.asset_id = s.asset_id and a.cntry_of_iss_cd = 'CN' and s.asset_status_cd in 'ISS' and s.status_eff_dt> '20180825'
+check underwritter
+select
+a.asset_id,
+r.from_obj_oid,
+r.to_obj_oid
+from
+dmo_govcorp..relationship_hist r,
+dmo_govcorp..asset a
+where
+a.asset_id = r.to_obj_oid and
+a.cntry_of_iss_cd = "CN" and
+r.from_obj_oid in (
+ADD CRT TW
+SELECT
+a.asset_id,
+a.cntry_of_iss_cd,
+a.private_place_fl,
+a.convertible_fl,
+a.asset_ticker,
+a.maturity_dt,
+a.prospectus_dt,
+a.asset_status_cd,
+a2.cdc_asset_class_cd,
+d.contributor_cd,
+d.contributor_src_cd,
+d.contributor_symbol
+FROM
+dmo_govcorp..asset a,
+dmo_govcorp..asset2 a2,
+dmo_govcorp..contrib_vehicle_xref d
+WHERE
+a.private_place_fl = 'y' and
+a.asset_ticker = 'ASICP' and
+a.cntry_of_iss_cd in ("TW") and
+a.asset_id = a2.asset_id and
+a.asset_id *=d.asset_id
+check seniority code and
+SELECT
+a.asset_id,o.seniority_type_cd, d.status_on_liquidation
+FROM
+dmo_govcorp..asset a,
+dmo_govcorp..orig_iss_info o,
+dmo_govcorp..asset_dbs_xref d
+WHERE
+a.asset_id=o.asset_id and a.asset_id=d.asset_id and
+a.asset_id in (0x00102c128a0519b8,
+0x00102c0f8a0519a5,
+PUT NOTICE DAY BLANK RUN
+select
+a.asset_id, a.flip_opt_fl,o.put_terms_fl,p.put_begin_notif,p.put_end_notif, c.call_begin_notif, c.call_end_notif,o.call_terms_fl
+from
+dmo_govcorp..put_terms p,
+dmo_govcorp..asset2 a,
+dmo_govcorp..asset o,
+dmo_govcorp..call_terms c
+where
+a.asset_id=p.asset_id and a.asset_id=o.asset_id and a.asset_id=c.asset_id
+and a.asset_id in (0x00102c5413661904,
+UOP TABLE BLANK
+select
+a.asset_id,
+p.use_of_proceeds,
+prospectus_dt=convert(varchar,a.prospectus_dt,101),
+a.amt_iss_tot
+from
+dmo_govcorp..orig_iss_info p,
+dmo_govcorp..asset a
+where
+a.asset_id=p.asset_id and a.cntry_of_iss_cd = "CN" and a.asset_id in (0x00102C92898D18B2,
+0x00102CD2948D18EF,
+0x00102C5AF25A16D8,
+0x00102C6F547F1860,
+0x00102C76547F1879,
+CHECK ISSUER NAME FOR MUN BOND
+select a.asset_id,
+a.prospectus_dt,
+c.party_long_name,
+c.party_id,
+a2.cdc_asset_class_cd
+from
+dmo_govcorp..asset a,
+dmo_govcorp..party c,
+dmo_govcorp..asset2 a2
+where a.issuer_id = c.party_id and a.asset_id = a2.asset_id and a2.cdc_asset_class_cd = 'MUN' and a.cntry_of_iss_cd = "CN"
+CHECK INTEREST DATED DATE AND PAY CALENDAR VALUE
+select a.asset_id,
+c.pay_cal_val, int_eff_dt=convert(varchar,c.int_eff_dt,101),
+c.pay_freq_cd
+from
+dmo_govcorp..asset a,
+dmo_govcorp..int_def c
+where a.asset_id = c.asset_id and a.cntry_of_iss_cd = "CN" and c.int_leg_nm = 1
+select *
+from dmo_govcorp..amt_outsd_hist
+where asset_id = 0x00102ce2706617df
+FUND TERMS FOR CN/TW
+select a.asset_id,
+      a.asset_status_cd,
+prospectus_dt=convert(char(10),a.prospectus_dt,101),
+     a.cntry_of_iss_cd,
+          a.isin_nm, o.prin_leg_nm, o.fund_begin_notif, o.fund_end_notif, o.fund_type_cd, o.fund_prd_unit_cd
+from dmo_govcorp..asset a,
+gcodes.dbo.asset_status_cds g,
+dmo_govcorp..fund_terms o
+where a.asset_status_cd = g.asset_status_cd
+and a.asset_subtype_cd in ('DMTC','FRGN')
+and a.asset_id = o.asset_id
+and o.fund_prd_unit_cd is NULL
+and a.cntry_of_iss_cd = 'TW'
+and o.fund_end_notif is not NULL
+regulation S
+select
+a.asset_id,
+a.cntry_of_iss_cd,
+prospectus_dt=convert(char(10),a.prospectus_dt,101),
+o.secoff_char,
+t.trading_restrict_cd,
+t.trading_restrict_cntry_cd
+from
+dmo_govcorp..asset a,
+dmo_govcorp..orig_iss_info o,
+dmo_govcorp..trading_restrict t
+where
+a.asset_id = o.asset_id and
+a.asset_id = t.asset_id and
+a.cntry_of_iss_cd in ("CN") and
+t.trading_restrict_cd in ("REGC1","REGC2","REGC3")
+CN EJV BOND NUMBER
+SELECT
+a.asset_id, a.full_bridge_symbol, a.isin_nm, convert(char(10),a.asset_setup_dt,101) asset_setup_dt, a.asset_status_cd, a.cntry_of_iss_cd,
+a2.cdc_asset_class_cd,
+a.private_place_fl,
+a.min_denom,
+a.denom_incr
+FROM
+dmo_govcorp..asset a,
+gcodes..asset_status_cds g,
+dmo_govcorp..asset2 a2
+WHERE
+a.cntry_of_iss_cd = "CN"
+AND a.asset_status_cd = g.asset_status_cd
+AND a.asset_id = a2.asset_id
+AND g.active_fl = 'y'
+AND asset_setup_dt>'20161231'
+fund term 0
+select a.asset_id,
+      a.asset_status_cd,
+     a.cntry_of_iss_cd,
+          a.isin_nm, o.prin_leg_nm, o.fund_begin_notif, o.fund_end_notif
+from dmo_govcorp..asset a,
+gcodes.dbo.asset_status_cds g,
+dmo_govcorp..fund_terms o
+where g.active_fl = 'y'
+and a.asset_status_cd = g.asset_status_cd
+and a.asset_subtype_cd in ('DMTC','FRGN')
+and a.asset_id = o.asset_id
+and o.fund_prd_unit_cd is NULL
+and a.cntry_of_iss_cd = 'CN'
+and (o.fund_begin_notif is not NULL
+or o.fund_end_notif is not NULL)
+SELECT
+a.asset_id, a.full_bridge_symbol, a.isin_nm, convert(char(10),a.asset_setup_dt,101) asset_setup_dt, a.asset_status_cd, a.cntry_of_iss_cd,
+a2.cdc_asset_class_cd,
+a.private_place_fl,
+a.min_denom,
+a.denom_incr,
+d.denom_amt
+FROM
+dmo_govcorp..asset a,
+dmo_govcorp..asset2 a2,
+dmo_govcorp..denom_info d
+WHERE
+a.asset_id = a2.asset_id and a.asset_id = d.asset_id
+and a.isin_nm in ('TW000G129084',
+'TW000A051086',
+'TW000B304344',
+'TW000B304351',
+'TW000B618BA4',
+'TW000B644467',
+'TW000B644608',
+'TW000B675172',
+'TW000B675180',
+'TW000B692011',
+'TW000B718634',
+'TW000B849025',
+'TW000B903V31',
+'TW000B946326',
+'TW000B946375',
+'TW000B946391',
+'TW000B951128',
+'TW000B978337',
+'TW000B978352',
+'TW000F074018',
+'TW000G101497',
+'TW000G114664',
+'TW000G117303',
+'TW000G125215',
+'TW000G125256',
+'TW000G134100',
+'TW000G139AE0')
+write up bond CN
+select
+a.asset_id,
+convert(char(10),a.asset_setup_dt,101) asset_setup_dt,
+a.asset_status_cd,
+a.cntry_of_iss_cd,
+a2.write_down_fl,
+a2.conver_cd,
+a2.tier_capital_cd
+from dmo_govcorp..asset a,
+gcodes.dbo.asset_status_cds g,
+dmo_govcorp..asset2 a2
+where g.active_fl = 'y'
+and a.asset_status_cd = g.asset_status_cd and a.asset_id=a2.asset_id
+and a.cntry_of_iss_cd = 'CN'
+and a2.write_down_fl = 'y'
+CLEARING AND EXCHANGE AND TRUSTEE 3 MARKETS
+select
+a.asset_id,
+prospectus_dt= convert(char(10), a.prospectus_dt, 101),
+a2.cdc_asset_class_cd,
+c1.clearing_system_cd as CGD,
+c2.clearing_system_cd as CSS,
+c3.clearing_system_cd as CSZ,
+e1.exch_cd as CFS,
+e2.exch_cd as SHH,
+e3.exch_cd as SHZ,
+t1.branch_id as trustee1,
+t2.branch_id as trustee2,
+t3.branch_id as trustee3
+from
+dmo_govcorp..asset a,
+dmo_govcorp..asset2 a2,
+dmo_govcorp..clearing_system c1,
+dmo_govcorp..clearing_system c2,
+dmo_govcorp..clearing_system c3,
+gcodes.dbo.asset_status_cds g,
+dmo_govcorp..asset_exchanges e1,
+dmo_govcorp..asset_exchanges e2,
+dmo_govcorp..asset_exchanges e3,
+dmo_govcorp..trustee_xref t1,
+dmo_govcorp..trustee_xref t2,
+dmo_govcorp..trustee_xref t3
+where
+a.asset_id =c1.asset_id and a.asset_id =a2.asset_id and a.asset_id =t1.asset_id and a.asset_id =e1.asset_id
+and g.active_fl = 'y'
+and a.asset_status_cd = g.asset_status_cd
+and a.asset_id *= c2.asset_id
+and a.asset_id *= c3.asset_id
+and a.asset_id *= e2.asset_id
+and a.asset_id *= e3.asset_id
+and a.asset_id *= t2.asset_id
+and a.asset_id *= t3.asset_id
+and c1.clearing_system_cd ="CGD"
+and c2.clearing_system_cd ="CSS"
+and c3.clearing_system_cd ="CSZ"
+and e1.exch_cd = "CFS"
+and e2.exch_cd = "SHH"
+and e3.exch_cd = "SHZ"
+and t1.branch_id =0x0003860028b56a72
+and t2.branch_id =0x00038600074336f7
+and t3.branch_id =0x0003860074798e06
+and a2.cdc_asset_class_cd = 'BTB'
+and a.cntry_of_iss_cd = 'CN'
+check underlying ric and conver definition China entity
+select a.asset_id, a.prospectus_dt, m.mace_issue_id, a.convertible_fl, i1.id_cd, i1.id_number, i3.id_number as 'ISIN',c.party_long_name, c.party_id, s.event_eff_dt, s.cnv_par, s.cnv_px, s.cnv_ratio, s.cnv_leg_nm, m.und_asset_domicile_cd, m.und_asset_curr_cd, m.und_asset_name, m.und_asset_ric, m.und_asset_ticker, m.und_asset_sector_cd, m.und_org_id, u.undly_id, y.id_number, y.id_cd
+from dmo_govcorp..asset a, dmo_govcorp..party c,dmo_govcorp..asset_ident i1 ,dmo_govcorp..asset_ident i2, dmo_govcorp..asset_ident i3,
+dmo_govcorp..convert_def m,
+dmo_govcorp..convert_sched s,
+dmo_govcorp..convert_underlying_xref u,
+dmo_govcorp..underlying_ident y
+where a.issuer_id = c.party_id and u.undly_id = y.undly_id and a.asset_id =i1.asset_id and a.asset_id =m.asset_id and a.asset_id =s.asset_id and a.asset_id =u.asset_id and a.asset_id *=i3.asset_id and a.asset_id *=i2.asset_id and i1.id_cd in ('SHZ') and i2.id_cd = 'PYC' and i3.id_cd = 'ISN' and a.cntry_of_iss_cd = "CN" and y.id_cd = "RIC"
+
