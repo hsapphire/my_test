@@ -1,0 +1,61 @@
+public class DeadlockDemo {
+
+    private static final Object lock1 = new Object();
+    private static final Object lock2 = new Object();
+
+    public static void main(String[] args) {
+
+        Thread t1 = new Thread(() -> {
+            synchronized (lock1) {
+                System.out.println("Thread 1: holding lock1...");
+                try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+
+                System.out.println("Thread 1: waiting for lock2...");
+                synchronized (lock2) {
+                    System.out.println("Thread 1: holding lock1 and lock2...");
+                }
+            }
+        });
+
+        Thread t2 = new Thread(() -> {
+            synchronized (lock2) {
+                System.out.println("Thread 2: holding lock2...");
+                try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+
+                System.out.println("Thread 2: waiting for lock1...");
+                synchronized (lock1) {
+                    System.out.println("Thread 2: holding lock2 and lock1...");
+                }
+            }
+        });
+
+        t1.start();
+        t2.start();
+    }
+}
+
+死锁发生的条件：
+线程1持有 lock1，等待 lock2。
+
+线程2持有 lock2，等待 lock1。
+
+两个线程都不释放锁，进入互相等待状态，形成死锁。
+如何观察死锁：
+你可以运行这个程序后使用以下命令观察死锁：
+
+jps                         # 找到 Java 进程 ID
+jstack <pid>                # 查看线程堆栈
+你会看到类似如下的输出（简化）：
+
+csharp
+Copy
+Edit
+Found one Java-level deadlock:
+"Thread-1":
+  waiting to lock monitor 0x00007fcd8c02a2b0 (object lock1),
+  which is held by "Thread-0"
+"Thread-0":
+  waiting to lock monitor 0x00007fcd8c02a3c0 (object lock2),
+  which is held by "Thread-1"
+
+  
