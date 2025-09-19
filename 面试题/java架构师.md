@@ -58,6 +58,10 @@ load banlance:
 sentinal:限流实现原理，
 spring boot: 自动装配实现原理，
 
+# arraylist 的add set 实现原理
+
+# hashcode的实现原理
+
 # mysql 
 读写锁，
 索引的实现原理
